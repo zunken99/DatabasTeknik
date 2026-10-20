@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Client.Interfaces;
 using Client.Models;
+using Microsoft.Data.Sqlite;
 
 namespace Client.Services;
 
@@ -12,8 +13,8 @@ public class ProductService : IProductService
 
     public ProductService()
     {
-        _path = string.Concat(Environment.CurrentDirectory, "/Data/products.json");
-        _storage = new();
+        _path = "Data Source=Runbase.db";
+        
     }
     public void Add(Product product)
     {
@@ -24,7 +25,35 @@ public class ProductService : IProductService
 
     public List<Product> ListAll()
     {
-        var products = _storage.Read(_path);
-        return products;
+        try
+        {
+            List<Product>products = [];
+            using SqliteConnection connection = new(_path);
+            using SqliteCommand command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM Products";
+            connection.Open();
+
+            using SqliteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                
+            }
+            return products;
+        }
+        catch (Exception ex)
+        {
+            
+            throw new Exception(ex.Message);
+        }
+    }
+
+    private Product CreateProduct(SqliteDataReader reader)
+    {
+        return new Product()
+        {
+            Id = reader.GetString(0),
+            
+        };
     }
 }

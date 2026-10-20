@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Client.Interfaces;
 using Client.Models;
 using Client.Views;
+using Microsoft.Data.Sqlite;
 
 namespace Client.Services;
 
@@ -27,4 +29,6 @@ public class CustomerService : ICustomerService
         var customers = _storage.Read(_path);
         return customers;
     }
+
+    
 }
